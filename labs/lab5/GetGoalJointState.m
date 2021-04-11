@@ -1,5 +1,9 @@
-function[goalJointState] = GetGoalJointState(blaster_robot, ufoFleet)
-    goalJointState = blasterRobot.getpos() + (rand(1,6)-0.5) * 20*pi/180;
+function[goalJointState] = GetGoalJointState(blasterRobot, ufoFleet)
+ for i = 1:1:ufoFleet.count
+      
+ end
+
+goalJointState = blasterRobot.getpos() + (rand(1,6)-0.5) * 20*pi/180;
 endEffectorTr = blasterRobot.fkine(goalJointState);
 % Ensure the Z component of the Z axis is positive (pointing upwards), and the Z component of the point is above 1 (approx mid height)
 

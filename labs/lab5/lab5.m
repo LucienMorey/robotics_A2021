@@ -21,7 +21,7 @@ tic;
 while ~isempty(find(0 < ufoFleet.healthRemaining,1))
    ufoFleet.PlotSingleRandomStep();
    % Get the goal joint state goalJointState = GetGoalJointState(blasterRobot,ufoFleet);
-
+   goalJointState = GetGoalJointState(blasterRobot,ufoFleet);
    % Fix goal pose back to a small step away from the min/max joint limits
    fixIndexMin = goalJointState' < blasterRobot.qlim(:,1);
    goalJointState(fixIndexMin) = blasterRobot.qlim(fixIndexMin,1) + 10*pi/180;
