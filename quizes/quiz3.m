@@ -5,9 +5,9 @@ clear;
 %specify these
 % plane definition
 normal = [1, 0, 0];
-point = [3, 0, 0];
+point = [6, 0, 0];
 %robot angles
-q = [pi/12, 0, 0,]; 
+q = [-pi/8,0,0]; 
 
 %create robot
 mdl_3link3d;
@@ -44,7 +44,7 @@ close all;
 clear;
 
 % specify these
-q = deg2rad([0, 0, 0, 0, 0]);
+q = deg2rad([30,-60,45,-30,0]);
 
 % Create robot
 L1 = Link('d', 0, 'a', 1, 'alpha', 0, 'qlim', [-pi,pi]);
@@ -65,8 +65,26 @@ close all;
 clear;
 
 % specifiy these
-q = deg2rad([0, 45,-80, 0, 45, 0]);
-sensor_pose = transl(-1.7881, - 0.15, 0.0033);
+q = deg2rad([0, 45, -80, 0, 45, 0]);
+sensor_pose = transl(1, -1.562, 1);
+
+% create puma
+mdl_puma560;
+distToSensor
+% calculate displacement to sensor
+robot_pose = p560.fkine(q);
+dist = -sqrt(distToSensor^2 - (1 - robot_pose(3, 4))^2 - (sensor_pose(1, 4) - robot_pose(1, 4))^2) + robot_pose(2, 4)
+
+% display result
+% disp(distance_to_sensor);
+
+%% Puma Distance Sense checker
+close all;
+clear;
+
+% specifiy these
+q = deg2rad([0, 45, -80, 0, 45, 0]);
+sensor_pose = transl(-0.2165, -0.1500, 1.0620);
 
 % create puma
 mdl_puma560;
@@ -81,7 +99,7 @@ disp(distance_to_sensor);
 clear;clc;close all;
 
 %specify these
-ball = transl(0.4, -0.2, 0.7) * trotx(-pi/2);
+ball = transl(0.5,0.1,0.6) * trotx(pi/2);
 q = deg2rad( [90, 30, -80, 0, 45, 0] );
 
 %create robot
@@ -99,7 +117,7 @@ xzy = ef2ball(1:3, 4)
 clear;clc;close all;
 
 %specify these
-t = transl(0.6, 0.1, 0.1);
+t = transl(0.7,0.1,0.2);
 
 %create robot
 mdl_puma560;
@@ -120,7 +138,7 @@ normal = [-1, 0, 0];
 point = [1.8, 0, 0];
 
 %robot joint angles
-q = [pi/12, 0, -pi/2, 0, 0, 0];
+q = [pi/12,0,-pi/2,0,0,0];
 
 %create robot
 mdl_puma560;
@@ -151,3 +169,20 @@ disp(intersectionPoint);
 %% Sawyer discussion
 
 %% Assignment 1 Trajectories
+
+s = lspb(0,1,steps);
+% First, create the scalar function
+qMatrix = nan(steps,6);
+% Create memory allocation for variables
+for i = 1:steps
+    qMatrix(i,:) = (1-s(i))*q1 + s(i)*q2;
+    % Generate interpolated joint angles
+end
+velocity = zeros(steps,6);
+acceleration  = zeros(steps,6);
+for i = 2:steps
+    velocity(i,:) = qMatrix(i,:) - qMatrix(i-1,:);
+    % Evaluate relative joint velocity
+    acceleration(i,:) = velocity(i,:) - velocity(i-1,:);
+    % Evaluate relative acceleration
+end
